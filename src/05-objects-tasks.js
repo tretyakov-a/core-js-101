@@ -6,7 +6,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Returns the rectangle object with width and height parameters and getArea() method
  *
@@ -24,12 +23,11 @@ function Rectangle(width, height) {
   return {
     width,
     height,
-    getArea: function() {
+    getArea() {
       return this.width * this.height;
-    }
-  }
+    },
+  };
 }
-
 
 /**
  * Returns the JSON representation of specified object
@@ -44,7 +42,6 @@ function Rectangle(width, height) {
 function getJSON(obj) {
   return JSON.stringify(obj);
 }
-
 
 /**
  * Returns the object of specified type from JSON representation
@@ -62,7 +59,6 @@ function fromJSON(proto, json) {
   Object.assign(obj, JSON.parse(json));
   return obj;
 }
-
 
 /**
  * Css selectors builder
@@ -118,49 +114,7 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
-const cssSelectorBuilder = {
-  add(value, type) {
-    if (!(this instanceof MyCssSelector)) {
-      return (new MyCssSelector()).add(value, type);
-    }
-  },
-
-  element(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.ELEMENT);
-  },
-
-  id(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.ID);
-  },
-
-  class(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.CLASS);
-  },
-
-  attr(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.ATTR);
-  },
-
-  pseudoClass(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.PSEUDO_CLASS);
-  },
-
-  pseudoElement(value) {
-    return this.add(value, MyCssSelector.ITEM_TYPES.PSEUDO_ELEMENT);
-  },
-
-  combine(selector1, combinator, selector2) {
-    return selector1
-      .add(combinator, MyCssSelector.ITEM_TYPES.COMBINATOR)
-      .add( selector2, MyCssSelector.ITEM_TYPES.SELECTOR);
-  }
-};
-
 function ICssBuilder() {}
-Object.keys(cssSelectorBuilder).forEach((key) => {
-  ICssBuilder.prototype[key] = cssSelectorBuilder[key];
-});
-ICssBuilder.prototype.constructor = ICssBuilder;
 
 class MyCssSelector extends ICssBuilder {
   constructor(items = []) {
@@ -171,10 +125,9 @@ class MyCssSelector extends ICssBuilder {
   }
 
   validate(type) {
-    const T = MyCssSelector.ITEM_TYPES;
     const typesCounter = this.disposableTypes.reduce((acc, t) => {
       if (!acc[t]) acc[t] = 0;
-      acc[t] = this.items.filter(({ type }) => type === t).length;
+      acc[t] = this.items.filter((item) => item.type === t).length;
       return acc;
     }, {});
     if (this.disposableTypes.includes(type) && typesCounter[type] === 1) {
@@ -192,7 +145,7 @@ class MyCssSelector extends ICssBuilder {
       this.validate(type);
     }
     let newValue = '';
-    switch(type) {
+    switch (type) {
       case T.ID: newValue = `#${value}`; break;
       case T.CLASS: newValue = `.${value}`; break;
       case T.ATTR: newValue = `[${value}]`; break;
@@ -223,7 +176,51 @@ MyCssSelector.ITEM_TYPES = {
   PSEUDO_ELEMENT: 5,
   COMBINATOR: 6,
   SELECTOR: 7,
-}
+};
+
+const cssSelectorBuilder = {
+  add(value, type) {
+    if (!(this instanceof MyCssSelector)) {
+      return (new MyCssSelector()).add(value, type);
+    }
+    return this;
+  },
+
+  element(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.ELEMENT);
+  },
+
+  id(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.ID);
+  },
+
+  class(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.CLASS);
+  },
+
+  attr(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.ATTR);
+  },
+
+  pseudoClass(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.PSEUDO_CLASS);
+  },
+
+  pseudoElement(value) {
+    return this.add(value, MyCssSelector.ITEM_TYPES.PSEUDO_ELEMENT);
+  },
+
+  combine(selector1, combinator, selector2) {
+    return selector1
+      .add(combinator, MyCssSelector.ITEM_TYPES.COMBINATOR)
+      .add(selector2, MyCssSelector.ITEM_TYPES.SELECTOR);
+  },
+};
+
+Object.keys(cssSelectorBuilder).forEach((key) => {
+  ICssBuilder.prototype[key] = cssSelectorBuilder[key];
+});
+ICssBuilder.prototype.constructor = ICssBuilder;
 
 module.exports = {
   Rectangle,

@@ -5,7 +5,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Return Promise object that is resolved with string value === 'Hooray!!! She said "Yes"!',
  * if boolean value === true is passed, resolved with string value === 'Oh no, she said "No".',
@@ -37,9 +36,8 @@ function willYouMarryMe(isPositiveAnswer) {
       ? 'Hooray!!! She said "Yes"!'
       : 'Oh no, she said "No".';
     resolve(message);
-  })
+  });
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -101,23 +99,23 @@ function getFastestPromise(array) {
  *
  */
 function chainPromises(array, action) {
-  return new Promise(async (resolve) => {
+  return new Promise((resolveUpper) => {
     new Promise((resolve) => {
       let result = null;
       const process = (index) => {
         if (index >= array.length) {
           return resolve(result);
         }
-        array[index]
+        return array[index]
           .then((res) => {
             result = result === null ? res : action(result, res);
           })
           .catch(() => {})
-          .finally(() => process(index + 1))
-      }
+          .finally(() => process(index + 1));
+      };
       process(0);
-    }).then((data) => resolve(data));
-    
+    }).then((data) => resolveUpper(data));
+
     // for (const p of array) {
     //   try {
     //     const res = await p;

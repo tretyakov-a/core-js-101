@@ -5,7 +5,6 @@
  *                                                                                           *
  ******************************************************************************************* */
 
-
 /**
  * Returns the result of concatenation of two strings.
  *
@@ -21,7 +20,6 @@
 function concatenateStrings(value1, value2) {
   return value1 + value2;
 }
-
 
 /**
  * Returns the length of given string.
@@ -68,7 +66,6 @@ function getStringFromTemplate(firstName, lastName) {
 function extractNameFromTemplate(value) {
   return value.match(/^Hello, (.*)!$/)[1];
 }
-
 
 /**
  * Returns a first char of the given string.
@@ -145,7 +142,6 @@ function unbracketTag(str) {
   return str.slice(1, -1);
 }
 
-
 /**
  * Converts all characters of the specified string into the upper case
  *
@@ -209,7 +205,6 @@ function getRectangleString(width, height) {
   return `${top}${middle.repeat(height - 2)}${bottom}`;
 }
 
-
 /**
  * Encode specified string with ROT13 cipher
  * See details:  https://en.wikipedia.org/wiki/ROT13
@@ -236,7 +231,7 @@ function encodeToRot13(str) {
     const encodedChar = index !== -1
       ? alphabet[(index + shift) % alphabet.length]
       : str[i];
-    encodedStr += isUpperCase(str[i]) ? encodedChar.toUpperCase() : encodedChar; 
+    encodedStr += isUpperCase(str[i]) ? encodedChar.toUpperCase() : encodedChar;
   }
   return encodedStr;
 }
@@ -257,7 +252,6 @@ function encodeToRot13(str) {
 function isString(value) {
   return (typeof value === 'string' || value instanceof String);
 }
-
 
 /**
  * Returns playid card id.
@@ -284,13 +278,12 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  const names = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+  const names = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
   const suits = ['♣', '♦', '♥', '♠'];
   const name = value.slice(0, -1);
   const suit = value.slice(-1);
   return names.indexOf(name) + names.length * suits.indexOf(suit);
 }
-
 
 module.exports = {
   concatenateStrings,

@@ -8,7 +8,6 @@
  *                                                                                             *
  ********************************************************************************************* */
 
-
 /**
  * Returns the functions composition of two specified functions f(x) and g(x).
  * The result of compose is to be a function of one argument, (lets call the argument x),
@@ -26,7 +25,6 @@
 function getComposition(f, g) {
   return (x) => f(g(x));
 }
-
 
 /**
  * Returns the math power function with the specified exponent
@@ -48,7 +46,6 @@ function getPowerFunction(exponent) {
   return (x) => x ** exponent;
 }
 
-
 /**
  * Returns the polynom function of one argument based on specified coefficients.
  * See: https://en.wikipedia.org/wiki/Polynomial#Definition
@@ -63,7 +60,8 @@ function getPowerFunction(exponent) {
  *   getPolynom()      => null
  */
 function getPolynom(...args) {
-  let a = 0, b = 0, c = 0;
+  let a = 0; let b = 0; let
+    c = 0;
   if (args.length === 3) {
     [a, b, c] = args;
   } else if (args.length === 2) {
@@ -73,7 +71,6 @@ function getPolynom(...args) {
   }
   return (x) => a * (x ** 2) + b * x + c;
 }
-
 
 /**
  * Memoizes passed function and returns function
@@ -96,9 +93,8 @@ function memoize(func) {
       mem = func();
     }
     return mem;
-  }
+  };
 }
-
 
 /**
  * Returns the function trying to call the passed function and if it throws,
@@ -116,19 +112,21 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-  return fn = () => {
+  return () => {
     try {
       return func();
-    } catch {
-      for (let i = 0; i < attempts; i += 1) {
-        try {
+    } catch (err) {
+      try {
+        for (let i = 0; i < attempts; i += 1) {
           return func();
-        } catch {}
+        }
+      } catch (error) {
+        return func();
       }
     }
-  }
+    return func();
+  };
 }
-
 
 /**
  * Returns the logging wrapper for the specified method,
@@ -158,12 +156,11 @@ function logger(func, logFunc) {
     const argsOutput = JSON.stringify(args).slice(1, -1);
     const funcOutput = `${func.name}(${argsOutput})`;
     logFunc(`${funcOutput} starts`);
-    const result = func.apply(null, args);
+    const result = func.call(null, ...args);
     logFunc(`${funcOutput} ends`);
     return result;
-  }
+  };
 }
-
 
 /**
  * Return the function with partial applied arguments
@@ -179,11 +176,8 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
 function partialUsingArguments(fn, ...args1) {
-  return (...restArgs) => {
-    return fn.apply(null, [...args1, ...restArgs]);
-  }
+  return (...restArgs) => fn.apply(null, [...args1, ...restArgs]);
 }
-
 
 /**
  * Returns the id generator function that returns next integer starting
@@ -204,9 +198,12 @@ function partialUsingArguments(fn, ...args1) {
  */
 function getIdGeneratorFunction(startFrom) {
   let currentNumber = startFrom;
-  return () => currentNumber++;
+  return () => {
+    const id = currentNumber;
+    currentNumber += 1;
+    return id;
+  };
 }
-
 
 module.exports = {
   getComposition,
